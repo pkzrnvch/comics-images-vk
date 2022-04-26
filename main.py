@@ -26,7 +26,6 @@ def get_filename(image_url):
 
 
 def check_vk_response(response):
-    response = response.json()
     if 'error' in response:
         raise VkApiError(
             f'Error code {response["error"]["error_code"]} -'
@@ -63,8 +62,9 @@ def get_vk_upload_url(vk_access_token, vk_group_id):
     }
     response = requests.get(url, params=payload)
     response.raise_for_status()
+    response = response.json()
     check_vk_response(response)
-    vk_upload_url = response.json()['response']['upload_url']
+    vk_upload_url = response['response']['upload_url']
     return vk_upload_url
 
 
@@ -72,9 +72,10 @@ def upload_photo_to_vk(upload_url, filename):
     with open(filename, 'rb') as file:
         files = {'photo': file}
         response = requests.post(upload_url, files=files)
-        check_vk_response(response)
-        response.raise_for_status()
-    uploaded_photo = response.json()
+    response.raise_for_status()
+    response = response.json()
+    check_vk_response(response)
+    uploaded_photo = response
     return uploaded_photo
 
 
@@ -90,8 +91,9 @@ def save_photo_to_vk(uploaded_photo, vk_access_token, vk_group_id):
     }
     response = requests.get(url, params=payload)
     response.raise_for_status()
+    response = response.json()
     check_vk_response(response)
-    saved_photo = response.json()
+    saved_photo = response
     return saved_photo
 
 
@@ -110,7 +112,7 @@ def publish_photo_to_vk(photo, comment, vk_access_token, vk_group_id):
     }
     response = requests.post(url, params=payload)
     response.raise_for_status()
-    print(response.json())
+    response = response.json()
     check_vk_response(response)
 
 
