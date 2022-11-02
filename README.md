@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 ### Usage
 
-To run the programm use the following command from the project directory:
+To run the program use the following command from the project directory:
 ```
 python main.py
 ```
